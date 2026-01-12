@@ -2,7 +2,7 @@
 
 **RetailPulse** is a backend microservice designed for e-commerce analytics. It ingests large-scale transactional data, performs customer segmentation (RFM Analysis), and forecasts future product demand using Machine Learning.
 
-> **Goal:** Built to demonstrate a production-ready data pipeline using Python, FastAPI, and Docker.
+> **Goal:** Built to demonstrate a production-ready data pipeline using tools listed below.
 
 ---
 
