@@ -1,12 +1,8 @@
-# Python artifacts
 __pycache__/
 *.pyc
 .venv/
 
-# Data Files (Never commit these!)
 data/*.csv
-data/*.duckdb
 data/*.pkl
 
-# IDE settings
 .idea/
