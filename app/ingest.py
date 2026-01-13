@@ -5,9 +5,14 @@ import polars as pl
 csv_path = pathlib.Path('~/PycharmProjects/retail.pred_api/data/retail_data.csv')
 
 database_url = "postgresql://user:password@localhost:5432/retail_db"
+# First preparations of the data
+df = pl.read_csv(csv_path,
+                 schema_overrides={"InvoiceNo": pl.String},
+                 try_parse_dates=True)
+df.columns = [name.lower() for name in df.columns]
+# Removing the discounts/returns (negative quantities)
+df = df.filter(pl.col('quantity') > 0)
 
-df = pl.read_csv(csv_path, schema_overrides={"InvoiceNo": pl.String})
-
+# Writing the database
 engine = create_engine(database_url)
-
 df.write_database('retail_db', connection = engine)
