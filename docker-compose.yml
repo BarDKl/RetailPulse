@@ -1,9 +1,11 @@
 services:
   db:
     image: postgres
+    container_name: retail_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: retail_db
     ports:
       - "5432:5432"
   app:
