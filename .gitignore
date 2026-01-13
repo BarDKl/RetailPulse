@@ -6,3 +6,4 @@ data/*.csv
 data/*.pkl
 
 .idea/
+pg_data/
