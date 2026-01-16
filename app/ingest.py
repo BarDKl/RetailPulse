@@ -11,12 +11,10 @@ df = pl.read_csv(csv_path,
                  try_parse_dates=True)
 df.columns = [name.lower() for name in df.columns]
 # Removing the discounts/returns (negative quantities) for math reliability and simplicity
-df = df.filter(~(pl.col('invoiceno').str.starts_with(('A'))))
-print(df.filter(pl.col('invoiceno').str.contains('C')))
-# df = df.select(pl.col('invoiceno').cast(pl.Int32),
-#     pl.exclude('invoiceno'))
-# print(df.null_count())
+df = df.filter(~(pl.col('invoiceno').str.starts_with(('A')))&~(pl.col('invoiceno').str.starts_with(('C'))))
+df = df.select(pl.col('invoiceno').cast(pl.Int32),
+    pl.exclude('invoiceno'))
 
-# # Writing the database
-# engine = create_engine(database_url)
-# df.write_database('retail_db', connection = engine)
+# Writing the database
+engine = create_engine(database_url)
+df.write_database('retail_db', connection = engine)

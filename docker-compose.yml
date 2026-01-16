@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./pg_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
   app:
     build: .
     container_name: retail_app
@@ -22,5 +22,8 @@ services:
 
 networks:
   retail_net:
+
+volumes:
+  postgres_data:
 
 version: '3.8'

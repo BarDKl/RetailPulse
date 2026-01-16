@@ -1,16 +1,16 @@
 # RetailPulse: Predictive Inventory API
 
-**RetailPulse** is a backend microservice designed for e-commerce analytics. It ingests large-scale transactional data, performs customer segmentation (RFM Analysis), and forecasts future product demand using Machine Learning.
+**RetailPulse** is a backend microservice designed for e-commerce analytics. It ingests large-scale transactional data, performs customer segmentation, and forecasts metrics by utilizing Machine learning models.
 
-> **Goal:** Built to demonstrate a production-ready data pipeline using tools listed below.
+> **Goal:** To showcase the production-ready Machine learning pipeline.
 
 ---
 
 ## Tech Stack
 
 * **Language:** Python 3.12
-* **Data Processing:** Polars (ETL), NumPy, Scikit-Learn (Forecasting)
-* **Frameworks:** FastAPI (REST API), Pytest (Testing)
+* **Data Processing:** Polars, NumPy, Scikit-Learn
+* **Frameworks:** FastAPI
 * **Infrastructure:** Docker, Docker Compose, WSL2 (Ubuntu)
 * **Database:** PostgreSQL 15 (Containerized)
 * **IDE:** PyCharm Community
