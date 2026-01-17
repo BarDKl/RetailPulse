@@ -8,7 +8,7 @@ class ModelService:
         self.rfm_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'rfm_model.pkl')
         self.rfm_model = None
         self.clv_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'clv_model.pkl')
-        self.clv.model = None
+        self.clv_model = None
         self.load_models()
 
     def load_models(self):
