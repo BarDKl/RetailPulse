@@ -32,7 +32,7 @@ segments_to_save = retail_data.with_columns(
     pl.Series(name = 'cluster', values = labels)
 )
 
-filepath = "app/final_models/pickles/rfm_pipeline.pkl"
+filepath = "app/final_models/pickles/rfm_model.pkl"
 with open(filepath, "wb") as f:
     pickle.dump(full_pipeline, f)
 

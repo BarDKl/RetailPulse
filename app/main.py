@@ -11,19 +11,23 @@ class CustomerInput(BaseModel):
 
 @app.get("/")
 def home():
-    model_status = "Active" if run_model.model else "Inactive"
+    model_status = "Active" if run_model.rfm_model else "Inactive"
     return {'message':'System is online'}
 
 @app.post("/predict")
 def predict_segment(data: CustomerInput):
-    segment = run_model.predict(
+    predicted_segment = run_model.predict_rfm(
         data.recency,
         data.frequency,
         data.monetary
     )
+    predicted_spend = run_model.predict_clv(
+        data.recency,
+        data.frequency,
+        data.monetary)
 
     return {
-        "customer_data": data,
-        "predicted_segment": segment,
-        "predicted_spend": f"This customer is a {segment}"
+        "customer_id": data.customer_id,
+        "segment": predicted_segment,
+        "predicted_future_spend": f"${predicted_spend}", # Return as a formatted string
     }
