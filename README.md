@@ -6,7 +6,7 @@
 
 ---
 
-## Tech Stack
+## Technologies used
 
 * **Language:** Python 3.12
 * **Data Processing:** Polars, NumPy, Scikit-Learn
