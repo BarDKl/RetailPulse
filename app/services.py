@@ -4,7 +4,7 @@ import numpy as np
 
 class ModelService:
     def __init__(self):
-        self.base_dir = pth.Path(__file__).parent.absolute()
+        self.base_dir = pth.Path('./app').absolute()
         self.rfm_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'rfm_model.pkl')
         self.rfm_model = None
         self.clv_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'clv_model.pkl')
@@ -16,7 +16,7 @@ class ModelService:
             if pth.Path.exists(self.rfm_path):
                 with open(self.rfm_path, 'rb') as f:
                     self.rfm_model = pickle.load(f)
-                print('RFM Model loaded succesfuly')
+                print('RFM Model loaded successfully')
             else:
                 print(f"ERROR: RFM model not found at {self.rfm_path}")
         except Exception as e:

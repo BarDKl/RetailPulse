@@ -25,5 +25,3 @@ networks:
 
 volumes:
   postgres_data:
-
-version: '3.8'
