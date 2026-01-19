@@ -24,7 +24,6 @@ SELECT
 FROM date_range, duration
 """
 cutoff_date = pl.read_database(q_cutoff, engine)[0,0]
-print(f'cutoff_date: {cutoff_date}')
 # then we extract RFM data from the time before cutoff and tagret monetary value from the rest and merge them to have a labeled dataset
 rfm_data = pl.read_database(f"""
     SELECT
@@ -47,7 +46,7 @@ target_data = pl.read_database(f"""
 
 final_data = rfm_data.join(target_data, on='customerid', how='left').fill_null(0)
 
-X = final_data.select(pl.col('frequency'),pl.col('recency'),pl.col('monetary')).to_numpy()
+X = final_data.select(pl.col('recency'),pl.col('frequency'),pl.col('monetary')).to_numpy()
 Y = final_data.get_column('target_monetary').to_numpy()
 
 final_model = RandomForestRegressor(n_estimators=200, max_depth=5, random_state=42)
