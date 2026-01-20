@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: retail_db
     ports:
       - "5432:5432"
+    networks:
+      - retail_net
     volumes:
       - postgres_data:/var/lib/postgresql/data
   app:
@@ -25,3 +27,5 @@ networks:
 
 volumes:
   postgres_data:
+
+version: '3.8'

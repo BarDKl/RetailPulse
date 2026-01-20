@@ -44,7 +44,7 @@ target_data = pl.read_database(f"""
     GROUP BY customerid
 """, engine)
 
-final_data = rfm_data.join(target_data, on='customerid', how='left').fill_null(0)
+final_data = rfm_data.join(target_data, on='customerid', how='left').filter((pl.col('target_monetary')<40000)&(pl.col('monetary')<40000)).fill_null(0)
 
 X = final_data.select(pl.col('recency'),pl.col('frequency'),pl.col('monetary')).to_numpy()
 Y = final_data.get_column('target_monetary').to_numpy()
