@@ -4,10 +4,10 @@ import numpy as np
 
 class ModelService:
     def __init__(self):
-        self.base_dir = pth.Path('./app').absolute()
-        self.rfm_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'rfm_model.pkl')
-        self.rfm_model = None
-        self.clv_path = pth.Path.joinpath(self.base_dir, 'final_models', 'pickles', 'clv_model.pkl')
+        self.models_dir = pth.Path.joinpath('.', 'app', 'final_models', 'pickles').absolute()
+        self.rfm_path = pth.Path.joinpath(self.models_dir, 'rfm_model.pkl')
+        self.rfm_model = None   
+        self.clv_path = pth.Path.joinpath(self.models_dir, 'clv_model.pkl')
         self.clv_model = None
         self.load_models()
 
