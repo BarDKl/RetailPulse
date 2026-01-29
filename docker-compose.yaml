@@ -1,3 +1,21 @@
+version: '3.8'
+
+x-airflow-common: &airflow-common
+  build: .
+  environment:
+    # Use 'db' instead of 'localhost'
+    - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://user:password@db:5432/retail_db
+    - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+    - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    - PYTHONPATH=/opt/airflow
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - .:/opt/airflow
+  networks:
+    - retail_net
+  depends_on:
+    - db
+
 services:
   db:
     image: postgres:15
@@ -12,6 +30,7 @@ services:
       - retail_net
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
   app:
     build: .
     container_name: retail_app
@@ -21,6 +40,32 @@ services:
       - retail_net
     ports:
       - '8000:8000'
+
+  airflow-webserver:
+    <<: *airflow-common
+    command: airflow webserver
+    container_name: airflow_webserver
+    ports:
+      - "8080:8080"
+
+  airflow-scheduler:
+    <<: *airflow-common
+    command: airflow scheduler
+    container_name: airflow_scheduler
+
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command: 
+      - -c
+      - airflow db init &&
+        airflow users create \
+          --username admin \
+          --password password \
+          --firstname Root \
+          --lastname User \
+          --role Admin \
+          --email your@email.com
 
 networks:
   retail_net:
