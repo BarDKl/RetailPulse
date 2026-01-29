@@ -17,7 +17,7 @@ def ingestion_clean(path):
         (pl.col('quantity') > 0)&(pl.col('unitprice') > 0)
     )
     df = df.select(pl.col('invoiceno').cast(pl.Int32), pl.exclude('invoiceno'))
-    df.write_database('transactions', connection=engine, if_table_exists='replace')
+    df.write_database('transactions', connection=engine, if_table_exists='append')
     return df
 
 #Transformations
@@ -34,7 +34,7 @@ def transform_to_rfm():
        from transactions, cte
        where customerid is not null
        group by customerid, maxdate""", connection = engine)
-    df.write_database('rfm_data', connection=engine, if_table_exists='replace')
+    df.write_database('rfm_data', connection=engine, if_table_exists='append')
 
 data_path = pathlib.Path.joinpath(pathlib.Path('__file__').parent.absolute(), 'data', 'past.csv')
 
