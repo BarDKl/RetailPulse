@@ -2,8 +2,9 @@ __pycache__/
 *.pyc
 .venv/
 
-data/*.csv
-data/*.pkl
+*.csv
+*.pkl
+
 
 .idea/
 pg_data/
