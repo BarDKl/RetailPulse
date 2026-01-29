@@ -14,7 +14,7 @@ engine = create_engine(database_url)
 q_cutoff = """
 WITH date_range AS (
     SELECT MIN(invoicedate) as min_date, MAX(invoicedate) as max_date
-    FROM retail_db
+    FROM transactions
 ),
 duration AS (
     SELECT max_date - min_date as total_days FROM date_range
@@ -24,7 +24,7 @@ SELECT
 FROM date_range, duration
 """
 cutoff_date = pl.read_database(q_cutoff, engine)[0,0]
-# then we extract RFM data from the time before cutoff and tagret monetary value from the rest and merge them to have a labeled dataset
+
 rfm_data = pl.read_database(f"""
     SELECT
         customerid,
