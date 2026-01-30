@@ -3,6 +3,4 @@ uvicorn
 scikit-learn
 numpy
 pydantic
-sqlalchemy
-psycopg2-binary
-apache-airflow[postgres]
+apache-airflow

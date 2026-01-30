@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 
 DB_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/retail_db"
+    "postgresql://user:password@localhost:5433/retail_db"
 )
 
 engine = create_engine(DB_URL)
