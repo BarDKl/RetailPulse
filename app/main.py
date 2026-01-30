@@ -19,13 +19,13 @@ class CustomerInput(BaseModel):
 
 @app.get("/")
 def home():
-    rfm_status = 'RFM Active' if run_model.rfm_model else 'RFM Inactive'
+    segment_status = 'Segment Active' if run_model.segment_model else 'Segment Inactive'
     clv_status = 'CLV Active' if run_model.clv_model else 'CLV Inactive'
-    return {'status1': rfm_status, 'status2': clv_status}
+    return {'status1': segment_status, 'status2': clv_status}
 
 @app.post("/predict")
-async def predict_segment(data: CustomerInput):
-    predicted_segment = run_model.predict_rfm(
+async def predict_segment_spend(data: CustomerInput):
+    predicted_segment = run_model.predict_segment(
         data.recency,
         data.frequency,
         data.monetary

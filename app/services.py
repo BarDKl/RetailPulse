@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 
 DB_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost:5433/retail_db"
+    "postgresql://user:password@localhost:5432/retail_db"
 )
 
 engine = create_engine(DB_URL)
@@ -16,23 +16,23 @@ engine = create_engine(DB_URL)
 
 class ModelService:
     def __init__(self):
-        self.models_dir = pth.Path('/opt/airflow/app/final_models/pickles')
+        self.models_dir = pth.Path.joinpath(pth.Path('.').absolute(), 'app/final_models/pickles')
         self.segment_path = self.models_dir / 'segment_model.pkl'
         self.clv_path = self.models_dir / 'clv_model.pkl'
-        self.rfm_model = None
+        self.segment_model = None
         self.clv_model = None
         self.load_models()
 
     def load_models(self):
         try:
-            if pth.Path.exists(self.rfm_path):
-                with open(self.rfm_path, 'rb') as f:
-                    self.rfm_model = pickle.load(f)
-                print('RFM Model loaded successfully')
+            if pth.Path.exists(self.segment_path):
+                with open(self.segment_path, 'rb') as f:
+                    self.segment_model = pickle.load(f)
+                print('Segment Model loaded successfully')
             else:
-                print(f"ERROR: RFM model not found at {self.rfm_path}")
+                print(f"ERROR: Segment model not found at {self.segment_path}")
         except Exception as e:
-            print(f"ERROR loading RFM model: {e}")
+            print(f"ERROR loading Segment model: {e}")
         try:
             if pth.Path.exists(self.clv_path):
                 with open(self.clv_path, "rb") as f:
@@ -44,18 +44,18 @@ class ModelService:
             print(f"Error loading CLV model: {e}")
 
     def predict_segment(self, recency, frequency, monetary):
-        if not self.rfm_model:
+        if not self.segment_model:
             raise 'no model loaded'
         input_data = np.array([[recency, frequency, monetary]])
-        prediction = self.rfm_model.predict(input_data)[0]
+        prediction = self.segment_model.predict(input_data)[0]
         segment_map = {0: 'Casual', 1: 'Loyal', 2: 'VIP'}
         return segment_map.get(int(prediction), 'Unknown')
 
     def batch_predict_segment(self, df: pl.DataFrame) -> pl.Series:
-        if not self.rfm_model:
+        if not self.segment_model:
             raise 'no model loaded'
         X = df.select(['recency', 'frequency', 'monetary']).to_numpy()
-        preds = self.rfm_model.predict(X)
+        preds = self.segment_model.predict(X)
         segment_map = {0: 'Casual', 1: 'Loyal', 2: 'VIP'}
         return pl.Series(name = "segment", values = [segment_map[i] for i in preds])
 
