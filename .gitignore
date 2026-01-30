@@ -4,8 +4,14 @@ __pycache__/
 
 *.csv
 *.pkl
-
+*.cfg
 
 .idea/
 pg_data/
 *.pkl
+
+logs/
+plugins/app/__pycache__/
+
+postgres-db-volume/
+postgres_data/
