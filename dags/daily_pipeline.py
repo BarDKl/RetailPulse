@@ -47,7 +47,7 @@ def write_to_postgres_logic():
     write_to_postgres(final_df, table_name="customer_insights", engine=engine)
 
 
-with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily', catchup=True) as dag:
+with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily', catchup=False) as dag:
     ingest = PythonOperator(
         task_id="ingest_csv_to_db",
         python_callable=ingest_csv_to_db
@@ -60,12 +60,12 @@ with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily
 
     predict_rfm = PythonOperator(
         task_id="predict_segments",
-        python_callable=daily_predict_segment()
+        python_callable=daily_predict_segment
     )
 
     predict_clv = PythonOperator(
         task_id="predict_clv",
-        python_callable=daily_predict_clv()
+        python_callable=daily_predict_clv
     )
 
     write_results = PythonOperator(
