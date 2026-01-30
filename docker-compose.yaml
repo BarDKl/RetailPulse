@@ -2,11 +2,13 @@ version: '3.8'
 
 x-airflow-common:
   # In order to add custom dependencies or upgrade provider distributions you can use your extended image.
-  # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
+  # Comment the image line, place your Dockerfile.app in the directory where you placed the docker-compose.yaml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   &airflow-common
   image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:3.1.6}
-  # build: .
+  build:
+    context: .
+    dockerfile: Dockerfile.airflow  # <--- Points to your new Airflow setup
   env_file:
     - ${ENV_FILE_PATH:-.env}
   environment: &airflow-common-env
@@ -15,7 +17,7 @@ x-airflow-common:
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: 'http://airflow-apiserver:8080/execution/'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
@@ -24,14 +26,15 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
     # The following line can be used to set a custom config file, stored in the local config folder
     AIRFLOW_CONFIG: '/opt/airflow/config/airflow.cfg'
+    DATABASE_URL: 'postgresql://user:password@retail_db:5432/retail_db'
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/app:/opt/airflow/plugins/app
   user: "${AIRFLOW_UID:-50000}:0"
   networks:
     - retail_net
@@ -101,22 +104,6 @@ services:
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
-      airflow-init:
-        condition: service_completed_successfully
-
-  airflow-worker:
-    <<: *airflow-common
-    command: celery worker
-    environment:
-      <<: *airflow-common-env
-      # Required to handle warm shutdown of the celery workers properly
-      # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
-      DUMB_INIT_SETSID: "0"
-    restart: always
-    depends_on:
-      <<: *airflow-common-depends-on
-      airflow-apiserver:
-        condition: service_healthy
       airflow-init:
         condition: service_completed_successfully
 
@@ -224,7 +211,6 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
-      _PIP_ADDITIONAL_REQUIREMENTS: ''
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
@@ -282,7 +268,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.app # <--- Points to your old FastAPI setup
     container_name: retail_app
     depends_on:
       - db
