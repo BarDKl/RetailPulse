@@ -1,11 +1,7 @@
-from sqlalchemy import create_engine
-import pathlib
 import polars as pl
 
-
-engine = create_engine("postgresql://user:password@localhost:5432/retail_db")
 # Extraction and first cleans
-def ingestion_clean(path):
+def ingest_clean(path,engine):
     """
     This Function ingests transaction data from csv, cleans it and writes it into the database
     """
@@ -36,6 +32,3 @@ def transform_to_rfm():
        group by customerid, maxdate""", connection = engine)
     df.write_database('rfm_data', connection=engine, if_table_exists='append')
 
-data_path = pathlib.Path.joinpath(pathlib.Path('__file__').parent.absolute(), 'data', 'past.csv')
-
-transform_to_rfm()
