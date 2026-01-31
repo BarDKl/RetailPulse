@@ -2,7 +2,6 @@ from airflow import DAG
 from airflow.providers.standard.operators.python import PythonOperator
 from airflow.exceptions import AirflowSkipException
 from datetime import datetime
-import pathlib
 import polars as pl
 from app.ETL import ingest_clean, transform_to_rfm
 from app.services import engine, ModelService, write_to_postgres
@@ -37,14 +36,14 @@ def daily_predict_clv():
     results = df_rfm.select(pl.col('customerid')).with_columns(clv_preds)
     results.write_csv("/tmp/clv_preds.csv")
 
-def write_to_postgres_logic():
+def write_to_postgres_daily():
     rfm_res = pl.read_csv("/tmp/segment_preds.csv")
     clv_res = pl.read_csv("/tmp/clv_preds.csv")
 
     # Join the parallel results
     final_df = rfm_res.join(clv_res, on="customerid", how="inner")
     # Final write to DB
-    write_to_postgres(final_df, table_name="customer_insights", engine=engine)
+    write_to_postgres(final_df, table_name="customer_insights", engine=engine, keyword = 'append')
 
 
 with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily', catchup=False) as dag:
@@ -70,7 +69,7 @@ with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily
 
     write_results = PythonOperator(
         task_id="write_to_final_table",
-        python_callable=write_to_postgres_logic
+        python_callable=write_to_postgres_daily
     )
 
     ingest >> transform >> [predict_rfm, predict_clv] >> write_results
