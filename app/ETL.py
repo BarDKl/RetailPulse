@@ -17,7 +17,7 @@ def ingest_clean(path,engine):
     return df
 
 #Transformations
-def transform_to_rfm():
+def transform_to_rfm(engine):
     """
     This Function transforms transaction data into rfm data
     """

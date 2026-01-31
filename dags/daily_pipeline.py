@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.python import PythonOperator
 from airflow.exceptions import AirflowSkipException
 from datetime import datetime
 import pathlib
@@ -17,13 +17,13 @@ def ingest_csv_to_db(**kwargs):
     ingest_clean(path,engine)
 
 def transform_rfm():
-    transform_to_rfm()
+    transform_to_rfm(engine)
 
 def daily_predict_segment():
     df_rfm = pl.read_database("SELECT * FROM rfm_data", engine)
     service = ModelService()
 
-    segment_labels = service.batch_predict_rfm(df_rfm)
+    segment_labels = service.batch_predict_segment(df_rfm)
 
     results = df_rfm.select(pl.col('customerid')).with_columns(segment_labels)
     results.write_csv("/tmp/segment_preds.csv")
@@ -38,11 +38,11 @@ def daily_predict_clv():
     results.write_csv("/tmp/clv_preds.csv")
 
 def write_to_postgres_logic():
-    rfm_res = pl.read_csv("/tmp/rfm_preds.csv")
+    rfm_res = pl.read_csv("/tmp/segment_preds.csv")
     clv_res = pl.read_csv("/tmp/clv_preds.csv")
 
     # Join the parallel results
-    final_df = rfm_res.join(clv_res, on="customer_id", how="inner")
+    final_df = rfm_res.join(clv_res, on="customerid", how="inner")
     # Final write to DB
     write_to_postgres(final_df, table_name="customer_insights", engine=engine)
 
@@ -55,7 +55,7 @@ with DAG("daily_predictions", start_date=datetime(2011, 11, 9), schedule='@daily
 
     transform = PythonOperator(
         task_id="transform_rfm_features",
-        python_callable=transform_to_rfm
+        python_callable=transform_rfm
     )
 
     predict_rfm = PythonOperator(

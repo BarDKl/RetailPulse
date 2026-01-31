@@ -27,10 +27,19 @@ def save_model(pipeline: sklearn.pipeline.Pipeline, filepath) -> None:
     with open(filepath, "wb") as f:
         pickle.dump(pipeline, f)
 
-DB_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/retail_db"
-)
+if __name__ == "__main__":
+    DB_URL = os.getenv(
+        "DATABASE_URL",
+        "postgresql://user:password@localhost:5432/retail_db"
+    )
 
-engine = create_engine(DB_URL)
-save_model(train_rfm(load_prepare_rfm_data(engine=engine)), pathlib.Path.joinpath(pathlib.Path('.').absolute(), 'app', 'final_models', 'pickles', 'segment_model.pkl'))
+    engine = create_engine(DB_URL)
+    
+    # Resolve path relative to this script file
+    current_dir = pathlib.Path(__file__).parent.absolute()
+    pickle_path = current_dir / 'pickles' / 'segment_model.pkl'
+    
+    # Ensure directory exists
+    pickle_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    save_model(train_rfm(load_prepare_rfm_data(engine=engine)), pickle_path)

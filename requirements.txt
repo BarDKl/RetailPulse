@@ -5,3 +5,5 @@ numpy
 polars
 pydantic
 apache-airflow
+connectorx>=0.3.2
+psycopg2-binary

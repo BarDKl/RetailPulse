@@ -16,7 +16,8 @@ engine = create_engine(DB_URL)
 
 class ModelService:
     def __init__(self):
-        self.models_dir = pth.Path.joinpath(pth.Path('.').absolute(), 'app/final_models/pickles')
+        # specific path resolution for airflow plugins
+        self.models_dir = pth.Path(__file__).parent / 'final_models/pickles'
         self.segment_path = self.models_dir / 'segment_model.pkl'
         self.clv_path = self.models_dir / 'clv_model.pkl'
         self.segment_model = None
