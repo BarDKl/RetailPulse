@@ -252,8 +252,10 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile.app # <--- Points to your old FastAPI setup
+      dockerfile: Dockerfile.app
     container_name: retail_app
+    volumes:
+      - ./app:/code/app
     depends_on:
       - db
     networks:
