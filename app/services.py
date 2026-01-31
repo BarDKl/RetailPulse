@@ -16,11 +16,11 @@ engine = create_engine(DB_URL)
 
 class ModelService:
     def __init__(self):
-        # specific path resolution for airflow plugins
-        self.models_dir = pth.Path(__file__).parent / 'final_models/pickles'
+        current_dir = pth.Path(__file__).parent.resolve()
+        self.models_dir = current_dir / 'final_models' / 'pickles'
         self.segment_path = self.models_dir / 'segment_model.pkl'
         self.clv_path = self.models_dir / 'clv_model.pkl'
-        self.segment_model = None
+        self.rfm_model = None
         self.clv_model = None
         self.load_models()
 
@@ -73,12 +73,12 @@ class ModelService:
         predictions = self.clv_model.predict(X)
         return pl.Series(name = "predicted_spend", values = predictions)
 
-def write_to_postgres(df: pl.DataFrame, table_name: str, engine):
+def write_to_postgres(df: pl.DataFrame, table_name: str, engine, keyword:str):
     with engine.begin() as conn:
         df.write_database(
             table_name=table_name,
             connection=conn,
-            if_table_exists="append"
+            if_table_exists=keyword
         )
 
 run_model = ModelService()
