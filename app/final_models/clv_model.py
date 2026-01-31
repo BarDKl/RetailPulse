@@ -26,7 +26,7 @@ def load_prepare_clv_data(engine):
             COUNT(invoiceno) as frequency,
             EXTRACT(DAY FROM (DATE '{cutoff_date}' - MAX(invoicedate))) as recency,
             SUM(quantity * unitprice) as monetary
-        FROM retail_db
+        FROM transactions
         WHERE customerid IS NOT NULL AND invoicedate <= '{cutoff_date}'
         GROUP BY customerid
     """, engine)
@@ -34,7 +34,7 @@ def load_prepare_clv_data(engine):
         SELECT
             customerid,
             SUM(quantity * unitprice) as target_monetary
-        FROM retail_db
+        FROM transactions
         WHERE customerid IS NOT NULL AND invoicedate > '{cutoff_date}'
         GROUP BY customerid
     """, engine)

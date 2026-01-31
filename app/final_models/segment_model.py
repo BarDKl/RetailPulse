@@ -13,7 +13,7 @@ def load_prepare_rfm_data(engine) -> pl.DataFrame:
     df = pl.read_database("""SELECT * FROM rfm_data""", engine)
     return df
 
-def train_rfm(rfm_data: pl.DataFrame) -> sklearn.pipeline.Pipeline:
+def train_segment(rfm_data: pl.DataFrame) -> sklearn.pipeline.Pipeline:
     X = rfm_data.select(pl.exclude('customerid')).to_numpy()
     full_pipeline = Pipeline([
         ('log', FunctionTransformer(np.log1p, validate=True)),
@@ -42,4 +42,4 @@ if __name__ == "__main__":
     # Ensure directory exists
     pickle_path.parent.mkdir(parents=True, exist_ok=True)
     
-    save_model(train_rfm(load_prepare_rfm_data(engine=engine)), pickle_path)
+    save_model(train_segment(load_prepare_rfm_data(engine=engine)), pickle_path)
