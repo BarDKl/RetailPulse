@@ -123,17 +123,13 @@ Interact with the API to get predictions for a specific customer profile.
 
 **Request:**
 
-```bash
-curl -X 'POST' \
-  'http://localhost:8000/predict' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
+```json
+{
   "recency": 12,
   "frequency": 5,
   "monetary": 1250.50,
   "customer_id": 9999
-}'
+}
 ```
 
 **Response:**
