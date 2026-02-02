@@ -1,4 +1,4 @@
-# 🚀 RetailPulse: Predictive Inventory API & ETL
+# RetailPulse: Predictive Inventory API & ETL
 
 ![Status](https://img.shields.io/badge/status-active_development-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
@@ -10,32 +10,32 @@
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 RetailPulse operates as a microservices architecture orchestrated via Docker:
 
-### 1. 🧠 Predictive API (Microservice)
+### 1. Predictive API (Microservice)
 *   **Tech Stack**: FastAPI, Scikit-Learn.
 *   **Role**: Serves real-time customer insights.
 *   **Capabilities**:
     *   **Customer Segmentation**: Uses K-Means clustering to categorize users (e.g., "VIP", "Churn Risk").
     *   **CLV Prediction**: Uses Random Forest Regression to forecast Customer Lifetime Value.
 
-### 2. 🔄 Automated ETL Pipeline (Orchestrator)
+### 2. Automated ETL Pipeline (Orchestrator)
 *   **Tech Stack**: Apache Airflow, Polars.
 *   **Role**: Manages the data lifecycle from ingestion to inference.
 *   **Workflows (DAGs)**:
     *   `daily_pipeline`: Ingests new transaction data from `data/future/`, cleans it, and updates predictions.
     *   `initial_pipeline`: bootstraps the system with historical data.
 
-### 3. 🗄️ Data Storage
+### 3. Data Storage
 *   **PostgreSQL**: Dual-database setup.
     *   **Retail DB**: Stores processed RFM metrics and ML predictions.
     *   **Airflow DB**: Manages DAG metadata and scheduling.
 
 ---
 
-## 🛠 Prerequisites
+## Prerequisites
 
 Before starting, ensure you have the following installed:
 *   **Docker Desktop** (or Engine + Compose)
@@ -44,7 +44,7 @@ Before starting, ensure you have the following installed:
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 Follow these steps to get RetailPulse running on your local machine.
 
@@ -81,7 +81,7 @@ Or access them manually:
 
 ---
 
-## 🕹️ Managing the Application
+## Managing the Application
 
 We provide a suite of scripts in the `scripts/` directory to simplify management:
 
@@ -94,7 +94,7 @@ We provide a suite of scripts in the `scripts/` directory to simplify management
 
 ---
 
-## 🔌 API Usage Example
+## API Usage Example
 
 Interact with the API to get predictions for a specific customer profile.
 
@@ -121,7 +121,7 @@ Interact with the API to get predictions for a specific customer profile.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
 retail.pred_api/
@@ -135,7 +135,3 @@ retail.pred_api/
 ```
 
 ---
-
-<div align="center">
-  <sub>Built with ❤️ by Barto</sub>
-</div>
