@@ -25,72 +25,93 @@ RetailPulse operates as a microservices architecture orchestrated via Docker:
 *   **Tech Stack**: Apache Airflow, Polars.
 *   **Role**: Manages the data lifecycle from ingestion to inference.
 *   **Workflows (DAGs)**:
-    *   `daily_pipeline`: Ingests new transaction data from `data/future/`, cleans it, and updates predictions.
-    *   `initial_pipeline`: bootstraps the system with historical data.
+    *   `initial_training_and_prediction`: Bootstraps the system (historical data).
+    *   `daily_predictions`: Runs daily ETL and inference.
+    *   `weekly_retraining_and_prediction`: Retrains models weekly.
 
 ### 3. Data Storage
-*   **PostgreSQL**: Dual-database setup.
-    *   **Retail DB**: Stores processed RFM metrics and ML predictions.
-    *   **Airflow DB**: Manages DAG metadata and scheduling.
+*   **PostgreSQL**: Dual-database setup (Retail DB & Airflow DB).
 
 ---
 
 ## Prerequisites
 
-Before starting, ensure you have the following installed:
-*   **Docker Desktop** (or Engine + Compose)
-*   **Python 3.12+** (for local scripts)
-*   **Git**
+Ensure you have the following installed:
+
+```bash
+# Verify Docker is installed
+docker --version
+
+# Verify Docker Compose is installed
+docker-compose --version
+
+# Verify Python is installed (3.12+ recommended)
+python --version
+```
 
 ---
 
 ## Quick Start Guide
 
-Follow these steps to get RetailPulse running on your local machine.
-
 ### 1. Environment Setup & Data
-The project includes a helper script to fetch the UCI Online Retail dataset and split it into "past" (training) and "future" (simulation) data.
 
-**Requirements for Data Script:**
-The data download script requires `pandas` and `ucimlrepo`. Install them locally:
+Install the required Python dependencies for the data loader:
+
 ```bash
 pip install pandas ucimlrepo polars
 ```
 
-**Run the Data Loader:**
+Download and prepare the dataset (splits into `past.csv` and `future/` daily files):
+
 ```bash
 python scripts/download_split_data.py
 ```
-*This will create a `data/` directory with `retail_data.csv`, `past.csv` and a `future/` folder containing daily transaction files.*
 
 ### 2. Launch the Application
-Start the entire stack using the helper script:
+
+Build and start the entire stack (Airflow, Postgres, FastAPI) in detached mode:
+
 ```bash
-./scripts/start_app.sh
+docker-compose up -d --build
 ```
-*This script runs `docker-compose up -d --build`, spinning up Airflow (Webserver, Scheduler, Triggerer), Postgres, and the FastAPI app.*
 
 ### 3. Access Interfaces
-Once everything is running, open the dashboards:
-```bash
-./scripts/open_ui.sh
-```
-Or access them manually:
-*   **Airflow UI**: [http://localhost:8080](http://localhost:8080) *(User/Pass: `airflow`/`airflow`)*
+
+*   **Airflow UI**: [http://localhost:8080](http://localhost:8080)
+    *   User: `airflow`
+    *   Pass: `airflow`
 *   **API Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
 
 ---
 
 ## Managing the Application
 
-We provide a suite of scripts in the `scripts/` directory to simplify management:
+Common commands for managing the application lifecycle:
 
-| Script | Description |
-| :--- | :--- |
-| `./scripts/start_app.sh` | **Builds** and **Starts** all containers in detached mode. |
-| `./scripts/stop_app.sh` | **Stops** and removes containers (preserves volumes). |
-| `./scripts/open_ui.sh` | Opens the Airflow UI and API Docs in your default browser. |
-| `python scripts/download_split_data.py` | Downloads and prepares the demo dataset. |
+**Start the Application:**
+```bash
+docker-compose up -d
+```
+
+**Stop the Application:**
+```bash
+docker-compose down
+```
+
+**View Application Logs:**
+```bash
+docker-compose logs -f
+```
+
+**Rebuild Containers (after code changes):**
+```bash
+docker-compose up -d --build
+```
+
+**Reset Data (WARNING: Deletes all DB volumes):**
+```bash
+docker-compose down -v
+```
 
 ---
 
@@ -100,17 +121,23 @@ Interact with the API to get predictions for a specific customer profile.
 
 **Endpoint**: `POST /predict`
 
-**Request**:
-```json
-{
+**Request:**
+
+```bash
+curl -X 'POST' \
+  'http://localhost:8000/predict' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
   "recency": 12,
   "frequency": 5,
   "monetary": 1250.50,
   "customer_id": 9999
-}
+}'
 ```
 
-**Response**:
+**Response:**
+
 ```json
 {
   "customer_id": 9999,
@@ -133,5 +160,3 @@ retail.pred_api/
 ├── scripts/              # Helper shell/python scripts
 └── docker-compose.yaml   # Container orchestration
 ```
-
----
