@@ -6,7 +6,7 @@
 ![Airflow](https://img.shields.io/badge/apache_airflow-017CEE)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571)
 
-**RetailPulse** is an enterprise-grade analytics platform designed to modernize retail operations. It bridges the gap between raw transactional data and actionable business insights by orchestrating a robust **ETL pipeline** with **Machine Learning** capabilities.
+**RetailPulse** is an  analytics platform designed to modernize retail operations. It bridges the gap between raw transactional data and actionable business insights by orchestrating a robust **Machine Learning** pipeline.
 
 ---
 
