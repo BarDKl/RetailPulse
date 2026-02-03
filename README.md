@@ -18,7 +18,7 @@ RetailPulse operates as a microservices architecture orchestrated via Docker:
 *   **Tech Stack**: FastAPI, Scikit-Learn.
 *   **Role**: Serves real-time customer insights.
 *   **Capabilities**:
-    *   **Customer Segmentation**: Uses K-Means clustering to categorize users (e.g., "VIP", "Churn Risk").
+    *   **Customer Segmentation**: Uses K-Means clustering to categorize users (eg. "Casual","VIP").
     *   **CLV Prediction**: Uses Random Forest Regression to forecast Customer Lifetime Value.
 
 ### 2. Automated ETL Pipeline (Orchestrator)
