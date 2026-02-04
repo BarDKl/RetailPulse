@@ -30,5 +30,5 @@ def transform_to_rfm(engine):
        from transactions, cte
        where customerid is not null
        group by customerid, maxdate""", connection = engine)
-    df.write_database('rfm_data', connection=engine, if_table_exists='append')
+    df.write_database('rfm_data', connection=engine, if_table_exists='replace')
 
