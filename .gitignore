@@ -6,6 +6,7 @@ __pycache__/
 *.pkl
 *.cfg
 
+.env
 .idea/
 pg_data/
 *.pkl

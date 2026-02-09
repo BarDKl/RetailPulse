@@ -1,4 +1,4 @@
-# RetailPulse: Predictive Inventory API & ETL
+# RetailPulse
 
 ![Status](https://img.shields.io/badge/status-active_development-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.12+-blue)
@@ -6,7 +6,7 @@
 ![Airflow](https://img.shields.io/badge/apache_airflow-017CEE)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571)
 
-**RetailPulse** is an enterprise-grade analytics platform designed to modernize retail operations. It bridges the gap between raw transactional data and actionable business insights by orchestrating a robust **ETL pipeline** with **Machine Learning** capabilities.
+**RetailPulse** is an  analytics platform designed to modernize retail operations. It bridges the gap between raw transactional data and actionable business insights by orchestrating a robust **Machine Learning** pipeline.
 
 ---
 
@@ -18,7 +18,7 @@ RetailPulse operates as a microservices architecture orchestrated via Docker:
 *   **Tech Stack**: FastAPI, Scikit-Learn.
 *   **Role**: Serves real-time customer insights.
 *   **Capabilities**:
-    *   **Customer Segmentation**: Uses K-Means clustering to categorize users (e.g., "VIP", "Churn Risk").
+    *   **Customer Segmentation**: Uses K-Means clustering to categorize users (eg. "Casual","VIP").
     *   **CLV Prediction**: Uses Random Forest Regression to forecast Customer Lifetime Value.
 
 ### 2. Automated ETL Pipeline (Orchestrator)
