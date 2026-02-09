@@ -4,11 +4,11 @@ from datetime import datetime
 import pathlib
 import polars as pl
 
-# ETL & Services imports
+
 from app.ETL import ingest_clean, transform_to_rfm
 from app.services import engine, ModelService, write_to_postgres
 
-# Training Imports
+
 from app.final_models.segment_model import (
     train_segment,
     save_model as save_rfm_model,
@@ -20,7 +20,6 @@ from app.final_models.clv_model import (
     load_prepare_clv_data
 )
 
-# --- CONFIG ---
 SEGMENT_MODEL_PATH = pathlib.Path("/opt/airflow/plugins/app/final_models/pickles/segment_model.pkl")
 CLV_MODEL_PATH = pathlib.Path("/opt/airflow/plugins/app/final_models/pickles/clv_model.pkl")
 
@@ -67,7 +66,6 @@ def write_to_postgres_initial():
     write_to_postgres(final_df, table_name="customer_insights", engine=engine, keyword = 'replace')
 
 
-# --- DAG DEFINITION ---
 with DAG(
         "initial_training_and_prediction",
         start_date=datetime(2011, 11, 8),

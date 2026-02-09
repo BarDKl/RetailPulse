@@ -50,8 +50,7 @@ def split_future(df: pl.DataFrame):
     results = {}
     if df.is_empty():
         return results
-        
-    # Get range of dates
+
     df_dates = df.with_columns(pl.col('invoicedate').dt.date().alias('date_only'))
     unique_dates = df_dates.select('date_only').unique().sort('date_only')['date_only']
     

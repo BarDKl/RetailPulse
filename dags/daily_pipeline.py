@@ -40,9 +40,7 @@ def write_to_postgres_daily():
     rfm_res = pl.read_csv("/tmp/segment_preds.csv")
     clv_res = pl.read_csv("/tmp/clv_preds.csv")
 
-    # Join the parallel results
     final_df = rfm_res.join(clv_res, on="customerid", how="inner")
-    # Final write to DB
     write_to_postgres(final_df, table_name="customer_insights", engine=engine, keyword = 'append')
 
 
