@@ -4,7 +4,6 @@ from sklearn.ensemble import RandomForestRegressor
 import pickle
 
 
-# to do this first we have to find the cutoff date which splits the time of our data in 70/30
 def load_prepare_clv_data(engine):
     q_cutoff = """
     WITH date_range AS (

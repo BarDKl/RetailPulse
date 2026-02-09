@@ -38,5 +38,5 @@ async def predict_segment_spend(data: CustomerInput):
     return {
         "customer_id": data.customer_id,
         "segment": predicted_segment,
-        "predicted_future_spend": f"{predicted_spend}£", # Return as a formatted string
+        "predicted_future_spend": f"{predicted_spend}£",
     }

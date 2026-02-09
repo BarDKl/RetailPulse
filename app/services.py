@@ -82,11 +82,3 @@ def write_to_postgres(df: pl.DataFrame, table_name: str, engine, keyword:str):
         )
 
 run_model = ModelService()
-
-# Daily Pipeline
-#
-# ingest_clean -> transform_to_rfm -> predict_rfm + predict_clv -> write_to_db
-#
-# Weekly Pipeline
-#
-# ingest_clean ->transform_to_rfm + transform_to_clv -> train_rfm + train_clv -> predict_rfm + predict_clv -> write_to_db
